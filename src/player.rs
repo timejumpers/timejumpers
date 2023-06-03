@@ -57,7 +57,13 @@ fn create_player_texture_handle(
 ) -> bevy::prelude::Handle<bevy::prelude::TextureAtlas> {
     let img_path = "sprites/Houston Front Walk Cycle.png".to_string();
     let texture_handle = asset_server.load(&img_path);
-    let texture_atlas =
-        TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 27.0), 1, 8, Some(Vec2::new(32.0, 1.0)), None);
+    let texture_atlas = TextureAtlas::from_grid(
+        texture_handle,
+        Vec2::new(32.0, 27.0),
+        1,
+        8,
+        Some(Vec2::new(32.0, 1.0)),
+        None,
+    );
     return texture_atlases.add(texture_atlas);
 }
