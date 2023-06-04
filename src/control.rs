@@ -1,9 +1,9 @@
 use bevy::prelude::*;
-use crate::entities::{MotionVector, Facing};
+use crate::entities::{MoveVector, Facing};
 use crate::player::Player;
 use crate::math::{max, min};
 
-pub fn keyboard_input(keys: Res<Input<KeyCode>>, mut query: Query<(&mut Facing, &mut MotionVector), With<Player>>) {
+pub fn keyboard_input(keys: Res<Input<KeyCode>>, mut query: Query<(&mut Facing, &mut MoveVector), With<Player>>) {
     let (mut facing, mut mv) = query.single_mut();
     if keys.pressed(KeyCode::Comma) {
         *facing = Facing::Backward;

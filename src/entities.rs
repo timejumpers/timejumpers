@@ -7,7 +7,10 @@ pub enum Facing {
 }
 
 #[derive(Component)]
-pub struct MotionVector(pub Vec2);
+pub struct MoveVector(pub Vec2);
+
+#[derive(Component)]
+pub struct MoveSpeed(pub f32);
 
 impl Facing {
     pub fn swap(&mut self) -> Self {
@@ -37,9 +40,14 @@ pub fn sprite_facing(mut query: Query<(&Facing, &EntityAtlas, &mut Handle<Textur
     }
 }
 
-pub fn move_entities(mut query: Query<(&mut Transform, &MotionVector)>) {
-    for (mut transform, mv) in query.iter_mut() {
-        transform.translation.x += mv.0.x;
-        transform.translation.y += mv.0.y;
+pub fn move_entities(mut query: Query<(&mut Transform, &MoveVector, Option<&MoveSpeed>)>) {
+    for (mut transform, mv, movement_speed) in query.iter_mut() {
+        let mut ms: f32 = 1.0;
+
+        if let Some(val) = movement_speed {
+            ms = val.0;
+        }
+        transform.translation.x += mv.0.x * ms;
+        transform.translation.y += mv.0.y * ms;
     }
 }
