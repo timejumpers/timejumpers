@@ -1,13 +1,20 @@
+mod animation;
 mod player;
+mod entities;
+mod control;
 
 use bevy::prelude::*;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
+        .add_plugin(player::PlayerSetup)
+
         .add_startup_system(setup)
-        .add_startup_system(player::setup_player)
-        .add_system(player::animate_sprite)
+
+        .add_system(animation::animate_sprites)
+        .add_system(entities::sprite_facing)
+        .add_system(control::keyboard_input)
         .run()
 }
 
