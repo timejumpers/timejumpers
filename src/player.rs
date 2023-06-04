@@ -29,7 +29,7 @@ fn setup_player(
         SpriteSheetBundle {
             texture_atlas: front,
             sprite: TextureAtlasSprite::new(animation_indices.first),
-            transform: Transform::from_scale(Vec3::splat(6.0)),
+            transform: Transform::from_scale(Vec3::splat(2.0)),
             ..default()
         },
         animation_indices,
