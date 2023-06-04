@@ -6,12 +6,6 @@ pub enum Facing {
     Backward,
 }
 
-#[derive(Component)]
-pub struct MoveVector(pub Vec2);
-
-#[derive(Component)]
-pub struct MoveSpeed(pub f32);
-
 impl Facing {
     pub fn swap(&mut self) -> Self {
         return match self {
@@ -20,6 +14,18 @@ impl Facing {
         };
     }
 }
+
+#[derive(Component)]
+pub struct MoveVector(pub Vec2);
+
+#[derive(Component)]
+pub struct MoveSpeed(pub f32);
+
+#[derive(Component)]
+pub struct Health(pub i32);
+
+#[derive(Component)]
+pub struct ReceiveDamage;
 
 #[derive(Component)]
 pub struct EntityAtlas {

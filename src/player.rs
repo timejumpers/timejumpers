@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::animation::{AnimationIndices, AnimationTimer};
-use crate::entities::{EntityAtlas, MoveVector, Facing, MoveSpeed};
+use crate::entities::{EntityAtlas, MoveVector, Facing, MoveSpeed, Health, ReceiveDamage};
 
 const FRONT_WALK_CYCLE_PATH: &str = "sprites/Houston Front Walk Cycle.png";
 const BACK_WALK_CYCLE_PATH: &str = "sprites/Houston Back Walk Cycle.png";
@@ -26,6 +26,8 @@ fn setup_player(
         Facing::Forward,
         MoveVector(Vec2::new(0.0, 0.0)),
         MoveSpeed(5.0),
+        Health(10),
+        ReceiveDamage,
         SpriteSheetBundle {
             texture_atlas: front,
             sprite: TextureAtlasSprite::new(animation_indices.first),
