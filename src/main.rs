@@ -1,3 +1,4 @@
+mod math;
 mod animation;
 mod player;
 mod entities;
@@ -13,8 +14,9 @@ fn main() {
         .add_startup_system(setup)
 
         .add_system(animation::animate_sprites)
-        .add_system(entities::sprite_facing)
         .add_system(control::keyboard_input)
+        .add_system(entities::sprite_facing)
+        .add_system(entities::move_entities)
         .run()
 }
 

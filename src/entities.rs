@@ -6,6 +6,9 @@ pub enum Facing {
     Backward,
 }
 
+#[derive(Component)]
+pub struct MotionVector(pub Vec2);
+
 impl Facing {
     pub fn swap(&mut self) -> Self {
         return match self {
@@ -31,5 +34,12 @@ pub fn sprite_facing(mut query: Query<(&Facing, &EntityAtlas, &mut Handle<Textur
                 *handle = atlas.backward.clone();
             }
         }
+    }
+}
+
+pub fn move_entities(mut query: Query<(&mut Transform, &MotionVector)>) {
+    for (mut transform, mv) in query.iter_mut() {
+        transform.translation.x += mv.0.x;
+        transform.translation.y += mv.0.y;
     }
 }
