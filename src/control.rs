@@ -1,22 +1,24 @@
 use crate::{
     entities::{Facing, MoveVector},
+    keyboard::get_scan_code,
     math::{max, min},
     player::Player,
-    keyboard::get_scan_code,
 };
 use bevy::prelude::*;
 
 #[derive(Component)]
-pub struct ControlScheme {
-    pub forward: ScanCode,
-    pub backward: ScanCode,
-    pub left: ScanCode,
-    pub right: ScanCode,
+pub enum ControlScheme {
+    Keyboard {
+        forward: ScanCode,
+        backward: ScanCode,
+        left: ScanCode,
+        right: ScanCode,
+    },
 }
 
 impl ControlScheme {
     pub fn wasd() -> Self {
-        ControlScheme {
+        ControlScheme::Keyboard {
             forward: ScanCode(get_scan_code("W")),
             backward: ScanCode(get_scan_code("S")),
             left: ScanCode(get_scan_code("A")),
@@ -25,13 +27,20 @@ impl ControlScheme {
     }
 
     pub fn arrow() -> Self {
-        ControlScheme { 
+        ControlScheme::Keyboard {
             forward: ScanCode(get_scan_code("Up")),
             backward: ScanCode(get_scan_code("Down")),
             left: ScanCode(get_scan_code("Left")),
             right: ScanCode(get_scan_code("Right")),
         }
     }
+}
+
+pub struct ControlState {
+    pub forward: isize,
+    pub backward: isize,
+    pub left: isize,
+    pub right: isize,
 }
 
 pub fn handle_input(
@@ -42,46 +51,28 @@ pub fn handle_input(
     >,
 ) {
     let (mut facing, mut mv, cs) = query.single_mut();
-    if keys.pressed(cs.forward) {
-        *facing = Facing::Backward;
-        let new_y = min(mv.0.y + 1.0, 1.0);
-        mv.0 = Vec2::new(mv.0.x, new_y);
-    }
+    let cs = match cs {
+        ControlScheme::Keyboard {
+            forward,
+            backward,
+            left,
+            right,
+        } => ControlState {
+            forward: if keys.pressed(*forward) { 1 } else { 0 },
+            backward: if keys.pressed(*backward) { 1 } else { 0 },
+            left: if keys.pressed(*left) { 1 } else { 0 },
+            right: if keys.pressed(*right) { 1 } else { 0 },
+        },
+    };
 
-    if keys.pressed(cs.backward) {
+    mv.0 = Vec2::new(
+        (cs.right - cs.left) as f32,
+        (cs.forward - cs.backward) as f32,
+    );
+
+    if mv.0.y < 0.0 {
         *facing = Facing::Forward;
-        let new_y = max(mv.0.y - 1.0, -1.0);
-        mv.0 = Vec2::new(mv.0.x, new_y);
-    }
-
-    if keys.pressed(cs.left) {
-        let new_x = max(mv.0.x - 1.0, -1.0);
-        mv.0 = Vec2::new(new_x, mv.0.y);
-    }
-
-    if keys.pressed(cs.right) {
-        let new_x = min(mv.0.x + 1.0, 1.0);
-        mv.0 = Vec2::new(new_x, mv.0.y);
-    }
-
-    if keys.just_released(cs.forward) {
-        let new_y = min(mv.0.y - 1.0, 0.0);
-        mv.0 = Vec2::new(mv.0.x, new_y);
-    }
-
-    if keys.just_released(cs.backward) {
-        let new_y = max(mv.0.y - 1.0, 0.0);
-        mv.0 = Vec2::new(mv.0.x, new_y);
-    }
-
-    if keys.just_released(cs.left) {
-        let new_x = min(mv.0.x + 1.0, 0.0);
-        mv.0 = Vec2::new(new_x, mv.0.y);
-    }
-
-    if keys.just_released(cs.right) {
-        let new_x = max(mv.0.x - 1.0, 0.0);
-        mv.0 = Vec2::new(new_x, mv.0.y);
+    } else if mv.0.y > 0.0 {
+        *facing = Facing::Backward;
     }
 }
-
