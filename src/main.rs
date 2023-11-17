@@ -4,27 +4,25 @@ mod animation;
 mod player;
 mod entities;
 mod control;
+mod multiplayer;
 
 use bevy::prelude::*;
-
-#[derive(Default)]
-pub struct CollisionEvent;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
+        .insert_resource(multiplayer::NumPlayers(2))
         .add_plugin(player::PlayerSetup)
 
         .add_startup_system(setup)
         .add_startup_system(enemy::spawn_enemy)
 
         .add_system(animation::animate_sprites)
-        .add_system(control::keyboard_input)
+        .add_system(control::handle_input)
         .add_system(entities::sprite_facing)
         .add_system(entities::move_entities)
         .add_system(enemy::check_for_collisions)
 
-        .add_event::<CollisionEvent>()
         .run()
 }
 

@@ -1,7 +1,6 @@
 use crate::entities::{Health, ReceiveDamage};
-use crate::CollisionEvent;
 use bevy::prelude::*;
-use bevy::sprite::collide_aabb::{collide, Collision};
+use bevy::sprite::collide_aabb::collide;
 
 #[derive(Component)]
 pub enum EnemyType {
@@ -28,7 +27,6 @@ pub fn spawn_enemy(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 pub fn check_for_collisions(
-    mut collision_events: EventWriter<CollisionEvent>,
     damager_query: Query<(&Transform, &ContactDamage)>,
     mut receiver_query: Query<(&Transform, &mut Health), With<ReceiveDamage>>
 ) {
@@ -41,7 +39,7 @@ pub fn check_for_collisions(
                 d_transform.scale.truncate(),
             );
 
-            let Some(collision) = collision else {
+            let Some(_) = collision else {
                 continue;
             };
 
