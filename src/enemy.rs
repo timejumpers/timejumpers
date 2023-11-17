@@ -44,7 +44,7 @@ pub fn check_for_collisions(
             };
 
             health.0 -= damage.0;
-            dbg!(health.0);
+            // dbg!(health.0);
         }
     }
 }

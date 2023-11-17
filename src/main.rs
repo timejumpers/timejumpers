@@ -5,6 +5,7 @@ mod player;
 mod entities;
 mod control;
 mod multiplayer;
+mod keyboard;
 
 use bevy::prelude::*;
 
