@@ -22,6 +22,16 @@ Once you've got everything, clone the repo into your desired folder and run
 `cargo build` to ensure everything is working. It should take a while, as the
 entire Bevy game engine has to build. It won't take this long each time. 
 
+### Building
+
+- For most development, `cargo run` will be sufficient
+- Use `cargo build --release --no-default-features` to generate release builds
+    - When cross-compiling, add `--target=<target>` to compile for a different
+        operating system
+        - You can find the list of targets by doing `rustup target list`
+        - You may need to download the target by doing `rustup target add <target>`
+
+
 ### Procedures
 
 - Don't push directly to `main`. File a pull request instead.

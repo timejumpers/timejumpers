@@ -1,5 +1,8 @@
 #![warn(clippy::all)]
-#![allow(clippy::needless_return)]
+#![warn(clippy::cargo)]
+#![allow(clippy::needless_return, clippy::multiple_crate_versions)]
+
+#![warn(dead_code)]
 
 pub mod animation;
 pub mod control;
@@ -9,3 +12,7 @@ pub mod keyboard;
 pub mod multiplayer;
 pub mod player;
 pub mod assets;
+
+fn hello() {
+
+}
