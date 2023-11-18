@@ -1,7 +1,6 @@
 use crate::{
     entities::{Facing, MoveVector},
     keyboard::get_scan_code,
-    math::{max, min},
     player::Player,
 };
 use bevy::prelude::*;
@@ -50,29 +49,30 @@ pub fn handle_input(
         With<Player>,
     >,
 ) {
-    let (mut facing, mut mv, cs) = query.single_mut();
-    let cs = match cs {
-        ControlScheme::Keyboard {
-            forward,
-            backward,
-            left,
-            right,
-        } => ControlState {
-            forward: if keys.pressed(*forward) { 1 } else { 0 },
-            backward: if keys.pressed(*backward) { 1 } else { 0 },
-            left: if keys.pressed(*left) { 1 } else { 0 },
-            right: if keys.pressed(*right) { 1 } else { 0 },
-        },
-    };
+    for (mut facing, mut mv, cs) in query.iter_mut() {
+        let input = match cs {
+            ControlScheme::Keyboard {
+                forward,
+                backward,
+                left,
+                right,
+            } => ControlState {
+                    forward: if keys.pressed(*forward) { 1 } else { 0 },
+                    backward: if keys.pressed(*backward) { 1 } else { 0 },
+                    left: if keys.pressed(*left) { 1 } else { 0 },
+                    right: if keys.pressed(*right) { 1 } else { 0 },
+                },
+        };
 
-    mv.0 = Vec2::new(
-        (cs.right - cs.left) as f32,
-        (cs.forward - cs.backward) as f32,
-    );
+        mv.0 = Vec2::new(
+            (input.right - input.left) as f32,
+            (input.forward - input.backward) as f32,
+        );
 
-    if mv.0.y < 0.0 {
-        *facing = Facing::Forward;
-    } else if mv.0.y > 0.0 {
-        *facing = Facing::Backward;
-    }
+        if mv.0.y < 0.0 {
+            *facing = Facing::Forward;
+        } else if mv.0.y > 0.0 {
+            *facing = Facing::Backward;
+        }
+    } 
 }

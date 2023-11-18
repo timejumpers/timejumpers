@@ -24,10 +24,34 @@ fn setup_player(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+    asset_path_res: Res<crate::assets::AssetPath>,
 ) {
     let animation_indices = AnimationIndices { first: 0, last: SPRITE_SHEET_NUM_ROWS - 1 };
-    let front = create_front_texture_atlas(&asset_server, &mut texture_atlases);
-    let back = create_back_texture_atlas(&asset_server, &mut texture_atlases);
+    let front = create_texture_atlas(FRONT_WALK_CYCLE_PATH, &asset_server, &mut texture_atlases, &asset_path_res);
+    let back = create_texture_atlas(BACK_WALK_CYCLE_PATH, &asset_server, &mut texture_atlases, &asset_path_res);
+
+    commands.spawn((
+        Player,
+        EntityAtlas {
+            forward: front.clone(),
+            backward: back.clone(),
+        },
+        Facing::Forward,
+        MoveVector(Vec2::new(0.0, 0.0)),
+        MoveSpeed(MOVESPEED),
+        Health(HEALTH),
+        ControlScheme::wasd(),
+        ReceiveDamage,
+        SpriteSheetBundle {
+            texture_atlas: front.clone(),
+            sprite: TextureAtlasSprite::new(animation_indices.clone().first),
+            transform: Transform::from_scale(Vec3::splat(2.0)),
+            ..default()
+        },
+        animation_indices.clone(),
+        AnimationTimer(Timer::from_seconds(ANIMATION_FRAME_TIME, TimerMode::Repeating)),
+    ));
+
     commands.spawn((
         Player,
         EntityAtlas {
@@ -38,7 +62,7 @@ fn setup_player(
         MoveVector(Vec2::new(0.0, 0.0)),
         MoveSpeed(MOVESPEED),
         Health(HEALTH),
-        ControlScheme::wasd(),
+        ControlScheme::arrow(),
         ReceiveDamage,
         SpriteSheetBundle {
             texture_atlas: front,
@@ -51,11 +75,14 @@ fn setup_player(
     ));
 }
 
-fn create_front_texture_atlas(
+fn create_texture_atlas(
+    asset_path: &str,
     asset_server: &Res<AssetServer>,
     texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
+    asset_path_res: &Res<crate::assets::AssetPath>,
 ) -> bevy::prelude::Handle<bevy::prelude::TextureAtlas> {
-    let texture_handle = asset_server.load(FRONT_WALK_CYCLE_PATH.to_string());
+    let asset_path = format!("{}/{}", asset_path_res.0, asset_path);
+    let texture_handle = asset_server.load(asset_path.to_string());
     let texture_atlas = TextureAtlas::from_grid(
         texture_handle,
         Vec2::new(FRAME_WIDTH, FRAME_HEIGHT),
@@ -66,23 +93,6 @@ fn create_front_texture_atlas(
     );
 
     return texture_atlases.add(texture_atlas);
-}
-
-fn create_back_texture_atlas(
-    asset_server: &Res<AssetServer>,
-    texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
-) -> Handle<TextureAtlas> {
-    let back_handle = asset_server.load(BACK_WALK_CYCLE_PATH.to_string());
-    let back_atlas = TextureAtlas::from_grid(
-        back_handle,
-        Vec2::new(FRAME_WIDTH, FRAME_HEIGHT),
-        SPRITE_SHEET_NUM_COLUMNS,
-        SPRITE_SHEET_NUM_ROWS,
-        Some(Vec2::new(FRAME_WIDTH, NUM_PAD_ROWS)),
-        None,
-    );
-
-    return texture_atlases.add(back_atlas);
 }
 
 pub struct PlayerSetup;
