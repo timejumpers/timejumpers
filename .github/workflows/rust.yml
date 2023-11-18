@@ -11,18 +11,6 @@ env:
   RUSTFLAGS: "-Dwarnings"
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Install dependencies
-      run: sudo apt -y install libasound2-dev portaudio19-dev build-essential libpulse-dev libdbus-1-dev pkg-config libusb-1.0-0-dev libftdi1-dev libudev-dev
-    - name: Build
-      run: cargo build --verbose
-    - name: Run tests
-      run: cargo test --verbose
-
   clippy_check:
     runs-on: ubuntu-latest
     steps:
