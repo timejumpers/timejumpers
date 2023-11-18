@@ -14,12 +14,13 @@ pub struct Enemy;
 pub struct ContactDamage(pub i32);
 
 pub fn spawn_enemy(mut commands: Commands, asset_server: Res<AssetServer>, asset_path_res: Res<crate::assets::AssetPath>) {
+    let asset_path = asset_path_res.0.join("sprites").join("Zchoop.png");
     commands.spawn((
         Enemy,
         EnemyType::Zchoop,
         ContactDamage(5),
         SpriteBundle {
-            texture: asset_server.load(format!("{}/{}", asset_path_res.0,"sprites/Zchoop.png")),
+            texture: asset_server.load(bevy::asset::AssetPath::from_path(&asset_path)),
             transform: Transform::from_scale(Vec3::splat(3.0)),
             ..default()
         },

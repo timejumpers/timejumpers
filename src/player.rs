@@ -4,8 +4,8 @@ use crate::animation::{AnimationIndices, AnimationTimer};
 use crate::entities::{EntityAtlas, MoveVector, Facing, MoveSpeed, Health, ReceiveDamage};
 use crate::control::ControlScheme;
 
-const FRONT_WALK_CYCLE_PATH: &str = "sprites/Houston Front Walk Cycle.png";
-const BACK_WALK_CYCLE_PATH: &str = "sprites/Houston Back Walk Cycle.png";
+const FRONT_WALK_CYCLE_PATH: &str = "Houston Front Walk Cycle.png";
+const BACK_WALK_CYCLE_PATH: &str = "Houston Back Walk Cycle.png";
 const SPRITE_SHEET_NUM_COLUMNS: usize = 1;
 const SPRITE_SHEET_NUM_ROWS: usize = 8;
 const FRAME_WIDTH: f32 = 32.0;
@@ -81,8 +81,8 @@ fn create_texture_atlas(
     texture_atlases: &mut ResMut<Assets<TextureAtlas>>,
     asset_path_res: &Res<crate::assets::AssetPath>,
 ) -> bevy::prelude::Handle<bevy::prelude::TextureAtlas> {
-    let asset_path = format!("{}/{}", asset_path_res.0, asset_path);
-    let texture_handle = asset_server.load(asset_path.to_string());
+    let asset_path = asset_path_res.0.join("sprites").join(asset_path);
+    let texture_handle = asset_server.load(bevy::asset::AssetPath::from_path(&asset_path));
     let texture_atlas = TextureAtlas::from_grid(
         texture_handle,
         Vec2::new(FRAME_WIDTH, FRAME_HEIGHT),
@@ -99,6 +99,6 @@ pub struct PlayerSetup;
 
 impl Plugin for PlayerSetup {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(setup_player);
+        app.add_systems(Startup, setup_player);
     }
 }

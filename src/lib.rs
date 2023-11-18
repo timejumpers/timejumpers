@@ -12,7 +12,3 @@ pub mod keyboard;
 pub mod multiplayer;
 pub mod player;
 pub mod assets;
-
-fn hello() {
-
-}
