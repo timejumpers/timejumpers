@@ -38,13 +38,6 @@ all future cargo commands to `cargo +nightly`.
         - You can find the list of targets by doing `rustup target list`
         - You may need to download the target by doing `rustup target add <target>`
 
-
-### Procedures
-
-- Don't push directly to `main`. File a pull request instead.
-    - Note: this can't be enforced because I don't want to pay for a GitHub
-    Teams account
-
 ### Before filing a pull request
 
 - Add changelog entry in `Unreleased`
