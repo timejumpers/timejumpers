@@ -99,6 +99,6 @@ pub struct PlayerSetup;
 
 impl Plugin for PlayerSetup {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(setup_player);
+        app.add_systems(Startup, setup_player);
     }
 }
