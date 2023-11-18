@@ -2,7 +2,7 @@
 name = "timejumpers"
 version = "0.0.1"
 edition = "2021"
-rust-version = "1.74.0"
+rust-version = "1.73.0"
 description = "Jump between the timelines to save the world!"
 categories = ["game", "game-development"]
 keywords = ["game", "game-development", "bevy", "rust"]
