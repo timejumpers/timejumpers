@@ -43,7 +43,7 @@ pub struct ControlState {
 }
 
 pub fn print_scan_codes(mut keys: EventReader<bevy::input::keyboard::KeyboardInput>) {
-    for ev in keys.iter() {
+    for ev in keys.read() {
         let sc = format!("{:#02x}", ev.scan_code);
         dbg!(sc);
     }
