@@ -22,6 +22,13 @@ Once you've got everything, clone the repo into your desired folder and run
 `cargo build` to ensure everything is working. It should take a while, as the
 entire Bevy game engine has to build. It won't take this long each time. 
 
+### Toolchain
+
+Timejumpers uses the nightly rust toolchain to speed up build times. Cargo
+should automatically handle this for you. If it doesn't, run `rustup toolchain
+install nightly` to install the nightly toolchain. You may need to add change
+all future cargo commands to `cargo +nightly`.
+
 ### Building
 
 - For most development, `cargo run` will be sufficient

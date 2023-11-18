@@ -8,9 +8,6 @@ keywords = ["game", "game-development", "bevy", "rust"]
 repository = "https://github.com/shakesbeare/timejumpers"
 license = "GNU APGL v3.0"
 
-[toolchain]
-channel = "nightly"
-
 [dependencies]
 bevy = { version = "0.12.0" }
 
