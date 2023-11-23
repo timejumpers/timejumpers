@@ -1,85 +1,181 @@
+use std::fmt::Display; 
+use std::fmt::Formatter;
+
 use crate::{
     entities::{Facing, MoveVector},
-    keyboard::get_scan_code,
     player::Player,
 };
+
+use action_maps::get_scan_code;
+use action_maps::input_type::UniversalInput;
+use action_maps::prelude::*;
 use bevy::prelude::*;
 
+#[derive(Clone, Copy)]
+pub enum Actions {
+    Forward,
+    Backward,
+    Left,
+    Right,
+}
+
+impl Display for Actions {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Actions::Forward => write!(f, "Forward"),
+            Actions::Backward => write!(f, "Backward"),
+            Actions::Left => write!(f, "Left"),
+            Actions::Right => write!(f, "Right"),
+        }
+    }
+}
+
+impl Actions {
+    pub fn get_variants() -> Vec<Actions> {
+        vec![
+            Actions::Forward,
+            Actions::Backward,
+            Actions::Left,
+            Actions::Right,
+        ]
+    }
+}
+
 #[derive(Component)]
-pub enum ControlScheme {
-    Keyboard {
-        forward: ScanCode,
-        backward: ScanCode,
-        left: ScanCode,
-        right: ScanCode,
-    },
+pub enum ControlType {
+    KeyboardWasd,
+    KeyboardArrow,
+    Gamepad,
 }
 
-impl ControlScheme {
-    pub fn wasd() -> Self {
-        ControlScheme::Keyboard {
-            forward: ScanCode(get_scan_code("W")),
-            backward: ScanCode(get_scan_code("S")),
-            left: ScanCode(get_scan_code("A")),
-            right: ScanCode(get_scan_code("D")),
+impl ControlType {
+    pub fn get_variants() -> Vec<ControlType> {
+        vec![
+            ControlType::KeyboardWasd,
+            ControlType::KeyboardArrow,
+            ControlType::Gamepad,
+        ]
+    }
+
+    pub fn get_binding(&self, action: &Actions) -> UniversalInput {
+        match self {
+            ControlType::KeyboardWasd => match action {
+                Actions::Forward => ScanCode(get_scan_code("W")).into(),
+                Actions::Left => ScanCode(get_scan_code("A")).into(),
+                Actions::Backward => ScanCode(get_scan_code("S")).into(),
+                Actions::Right => ScanCode(get_scan_code("D")).into(),
+            },
+            ControlType::KeyboardArrow => {
+                match action {
+                    Actions::Forward => ScanCode(get_scan_code("Up")).into(),
+                    Actions::Left => ScanCode(get_scan_code("Left")).into(),
+                    Actions::Backward => ScanCode(get_scan_code("Down")).into(),
+                    Actions::Right => ScanCode(get_scan_code("Right")).into(),
+                }
+            },
+            ControlType::Gamepad => todo!(),
         }
     }
-
-    pub fn arrow() -> Self {
-        ControlScheme::Keyboard {
-            forward: ScanCode(get_scan_code("Up")),
-            backward: ScanCode(get_scan_code("Down")),
-            left: ScanCode(get_scan_code("Left")),
-            right: ScanCode(get_scan_code("Right")),
-        }
-    }
 }
 
-pub struct ControlState {
-    pub forward: isize,
-    pub backward: isize,
-    pub left: isize,
-    pub right: isize,
-}
+pub fn bind_keys(mut control_scheme: ResMut<ControlScheme>) {
+    // KeyboardWasd bindings
+    control_scheme.insert(
+        "KeyboardWasdForward",
+        ControlType::KeyboardWasd.get_binding(&Actions::Forward),
+    );
 
-pub fn print_scan_codes(mut keys: EventReader<bevy::input::keyboard::KeyboardInput>) {
-    for ev in keys.read() {
-        let sc = format!("{:#02x}", ev.scan_code);
-        dbg!(sc);
-    }
+    control_scheme.insert(
+        "KeyboardWasdLeft",
+        ControlType::KeyboardWasd.get_binding(&Actions::Left),
+    );
+
+    control_scheme.insert(
+        "KeyboardWasdBackward",
+        ControlType::KeyboardWasd.get_binding(&Actions::Backward),
+    );
+
+    control_scheme.insert(
+        "KeyboardWasdRight",
+        ControlType::KeyboardWasd.get_binding(&Actions::Right),
+    );
+
+    // KeyboardArrow bindings
+    control_scheme.insert(
+        "KeyboardArrowForward",
+        ControlType::KeyboardArrow.get_binding(&Actions::Forward),
+    );
+
+    control_scheme.insert(
+        "KeyboardArrowLeft",
+        ControlType::KeyboardArrow.get_binding(&Actions::Left),
+    );
+
+    control_scheme.insert(
+        "KeyboardArrowBackward",
+        ControlType::KeyboardArrow.get_binding(&Actions::Backward),
+    );
+
+    control_scheme.insert(
+        "KeyboardArrowRight",
+        ControlType::KeyboardArrow.get_binding(&Actions::Right),
+    );
 }
 
 pub fn handle_input(
-    keys: Res<Input<ScanCode>>,
+    inputs: Res<ActionInput>,
     mut query: Query<
-        (&mut Facing, &mut MoveVector, &ControlScheme),
+        (&mut Facing, &mut MoveVector, &ControlType),
         With<Player>,
     >,
 ) {
-    for (mut facing, mut mv, cs) in query.iter_mut() {
-        let input = match cs {
-            ControlScheme::Keyboard {
-                forward,
-                backward,
-                left,
-                right,
-            } => ControlState {
-                    forward: if keys.pressed(*forward) { 1 } else { 0 },
-                    backward: if keys.pressed(*backward) { 1 } else { 0 },
-                    left: if keys.pressed(*left) { 1 } else { 0 },
-                    right: if keys.pressed(*right) { 1 } else { 0 },
-                },
-        };
+    for (mut facing, mut mv, control_type) in query.iter_mut() {
+        let mut new_mv = Vec2::ZERO;
+        match control_type {
+            ControlType::KeyboardWasd => {
+                if inputs.pressed("KeyboardWasdForward") {
+                    new_mv.y += 1.0;
+                }
 
-        mv.0 = Vec2::new(
-            (input.right - input.left) as f32,
-            (input.forward - input.backward) as f32,
-        );
+                if inputs.pressed("KeyboardWasdLeft") {
+                    new_mv.x -= 1.0;
+                }
+
+                if inputs.pressed("KeyboardWasdBackward") {
+                    new_mv.y -= 1.0;
+                }
+
+                if inputs.pressed("KeyboardWasdRight") {
+                    new_mv.x += 1.0;
+                }
+            },
+            ControlType::KeyboardArrow => {
+                if inputs.pressed("KeyboardArrowForward") {
+                    new_mv.y += 1.0;
+                }
+
+                if inputs.pressed("KeyboardArrowLeft") {
+                    new_mv.x -= 1.0;
+                }
+
+                if inputs.pressed("KeyboardArrowBackward") {
+                    new_mv.y -= 1.0;
+                }
+
+                if inputs.pressed("KeyboardArrowRight") {
+                    new_mv.x += 1.0;
+                }
+            },
+            ControlType::Gamepad => todo!(),
+        }
+
+        mv.0 = new_mv;
 
         if mv.0.y < 0.0 {
             *facing = Facing::Forward;
         } else if mv.0.y > 0.0 {
             *facing = Facing::Backward;
         }
-    } 
+    }
 }
+

@@ -72,6 +72,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "action_maps"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0abbab1ba2e9f9bc8c5bd11e7e97dbc4045536c7db3a9496ac4f3fdc9b17c8fc"
+dependencies = [
+ "bevy_app",
+ "bevy_ecs",
+ "bevy_input",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3119,6 +3130,7 @@ dependencies = [
 name = "timejumpers"
 version = "0.0.1"
 dependencies = [
+ "action_maps",
  "bevy",
 ]
 
