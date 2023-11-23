@@ -1,6 +1,3 @@
-use std::fmt::Display; 
-use std::fmt::Formatter;
-
 use crate::{
     entities::{Facing, MoveVector},
     player::Player,
@@ -17,17 +14,6 @@ pub enum Actions {
     Backward,
     Left,
     Right,
-}
-
-impl Display for Actions {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Actions::Forward => write!(f, "Forward"),
-            Actions::Backward => write!(f, "Backward"),
-            Actions::Left => write!(f, "Left"),
-            Actions::Right => write!(f, "Right"),
-        }
-    }
 }
 
 impl Actions {
@@ -49,14 +35,6 @@ pub enum ControlType {
 }
 
 impl ControlType {
-    pub fn get_variants() -> Vec<ControlType> {
-        vec![
-            ControlType::KeyboardWasd,
-            ControlType::KeyboardArrow,
-            ControlType::Gamepad,
-        ]
-    }
-
     pub fn get_binding(&self, action: &Actions) -> UniversalInput {
         match self {
             ControlType::KeyboardWasd => match action {
