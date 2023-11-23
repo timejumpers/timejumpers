@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::animation::{AnimationIndices, AnimationTimer};
 use crate::entities::{EntityAtlas, MoveVector, Facing, MoveSpeed, Health, ReceiveDamage};
-use crate::control::ControlScheme;
+use crate::control::ControlType;
 
 const FRONT_WALK_CYCLE_PATH: &str = "Houston Front Walk Cycle.png";
 const BACK_WALK_CYCLE_PATH: &str = "Houston Back Walk Cycle.png";
@@ -40,7 +40,7 @@ fn setup_player(
         MoveVector(Vec2::new(0.0, 0.0)),
         MoveSpeed(MOVESPEED),
         Health(HEALTH),
-        ControlScheme::wasd(),
+        ControlType::KeyboardWasd,
         ReceiveDamage,
         SpriteSheetBundle {
             texture_atlas: front.clone(),
@@ -62,7 +62,7 @@ fn setup_player(
         MoveVector(Vec2::new(0.0, 0.0)),
         MoveSpeed(MOVESPEED),
         Health(HEALTH),
-        ControlScheme::arrow(),
+        ControlType::KeyboardArrow,
         ReceiveDamage,
         SpriteSheetBundle {
             texture_atlas: front,
