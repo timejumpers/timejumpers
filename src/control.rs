@@ -26,23 +26,22 @@ impl From<Actions> for Action {
     }
 }
 
-pub fn bind_keys(mut control_scheme: ResMut<MultiScheme>, mut inputs: ResMut<MultiInput>) {
-    let wasd = ControlScheme::with_controls(
-        vec![
-            (Actions::Forward, ScanCode(get_scan_code("W"))),
-            (Actions::Backward, ScanCode(get_scan_code("S"))),
-            (Actions::Left, ScanCode(get_scan_code("A"))),
-            (Actions::Right, ScanCode(get_scan_code("D"))),
-        ]
-    );
-    let arrows = ControlScheme::with_controls(
-        vec![
-            (Actions::Forward, ScanCode(get_scan_code("Up"))),
-            (Actions::Backward, ScanCode(get_scan_code("Down"))),
-            (Actions::Left, ScanCode(get_scan_code("Left"))),
-            (Actions::Right, ScanCode(get_scan_code("Right"))),
-        ]
-    );
+pub fn bind_keys(
+    mut control_scheme: ResMut<MultiScheme>,
+    mut inputs: ResMut<MultiInput>,
+) {
+    let wasd = ControlScheme::with_controls(vec![
+        (Actions::Forward, ScanCode(get_scan_code("W"))),
+        (Actions::Backward, ScanCode(get_scan_code("S"))),
+        (Actions::Left, ScanCode(get_scan_code("A"))),
+        (Actions::Right, ScanCode(get_scan_code("D"))),
+    ]);
+    let arrows = ControlScheme::with_controls(vec![
+        (Actions::Forward, ScanCode(get_scan_code("Up"))),
+        (Actions::Backward, ScanCode(get_scan_code("Down"))),
+        (Actions::Left, ScanCode(get_scan_code("Left"))),
+        (Actions::Right, ScanCode(get_scan_code("Right"))),
+    ]);
 
     control_scheme.insert(0, wasd);
     control_scheme.insert(1, arrows);
