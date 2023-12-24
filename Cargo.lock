@@ -73,9 +73,9 @@ dependencies = [
 
 [[package]]
 name = "action_maps"
-version = "0.1.0"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0abbab1ba2e9f9bc8c5bd11e7e97dbc4045536c7db3a9496ac4f3fdc9b17c8fc"
+checksum = "39901a6c5c4f6b544e786755a4fdd65a42b619e62ec26cb9555c961b5b7fa9ee"
 dependencies = [
  "bevy_app",
  "bevy_ecs",

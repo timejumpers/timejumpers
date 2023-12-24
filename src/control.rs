@@ -1,11 +1,10 @@
 use crate::{
     entities::{Facing, MoveVector},
-    player::Player,
+    player::{Player, PlayerId},
 };
 
 use action_maps::get_scan_code;
-use action_maps::input_type::UniversalInput;
-use action_maps::prelude::*;
+use action_maps::multiplayer::*;
 use bevy::prelude::*;
 
 #[derive(Clone, Copy)]
@@ -16,130 +15,60 @@ pub enum Actions {
     Right,
 }
 
-impl Actions {
-    pub fn get_variants() -> Vec<Actions> {
-        vec![
-            Actions::Forward,
-            Actions::Backward,
-            Actions::Left,
-            Actions::Right,
-        ]
-    }
-}
-
-#[derive(Component)]
-pub enum ControlType {
-    KeyboardWasd,
-    KeyboardArrow,
-    Gamepad,
-}
-
-impl ControlType {
-    pub fn get_binding(&self, action: &Actions) -> UniversalInput {
-        match self {
-            ControlType::KeyboardWasd => match action {
-                Actions::Forward => ScanCode(get_scan_code("W")).into(),
-                Actions::Left => ScanCode(get_scan_code("A")).into(),
-                Actions::Backward => ScanCode(get_scan_code("S")).into(),
-                Actions::Right => ScanCode(get_scan_code("D")).into(),
-            },
-            ControlType::KeyboardArrow => match action {
-                Actions::Forward => ScanCode(get_scan_code("Up")).into(),
-                Actions::Left => ScanCode(get_scan_code("Left")).into(),
-                Actions::Backward => ScanCode(get_scan_code("Down")).into(),
-                Actions::Right => ScanCode(get_scan_code("Right")).into(),
-            },
-            ControlType::Gamepad => todo!(),
+impl From<Actions> for Action {
+    fn from(value: Actions) -> Self {
+        match value {
+            Actions::Forward => Action::from("Forward"),
+            Actions::Backward => Action::from("Backward"),
+            Actions::Left => Action::from("Left"),
+            Actions::Right => Action::from("Right"),
         }
     }
 }
 
-pub fn bind_keys(mut control_scheme: ResMut<ControlScheme>) {
-    // KeyboardWasd bindings
-    control_scheme.insert(
-        "KeyboardWasdForward",
-        ControlType::KeyboardWasd.get_binding(&Actions::Forward),
+pub fn bind_keys(mut control_scheme: ResMut<MultiScheme>, mut inputs: ResMut<MultiInput>) {
+    let wasd = ControlScheme::with_controls(
+        vec![
+            (Actions::Forward, ScanCode(get_scan_code("W"))),
+            (Actions::Backward, ScanCode(get_scan_code("S"))),
+            (Actions::Left, ScanCode(get_scan_code("A"))),
+            (Actions::Right, ScanCode(get_scan_code("D"))),
+        ]
+    );
+    let arrows = ControlScheme::with_controls(
+        vec![
+            (Actions::Forward, ScanCode(get_scan_code("Up"))),
+            (Actions::Backward, ScanCode(get_scan_code("Down"))),
+            (Actions::Left, ScanCode(get_scan_code("Left"))),
+            (Actions::Right, ScanCode(get_scan_code("Right"))),
+        ]
     );
 
-    control_scheme.insert(
-        "KeyboardWasdLeft",
-        ControlType::KeyboardWasd.get_binding(&Actions::Left),
-    );
-
-    control_scheme.insert(
-        "KeyboardWasdBackward",
-        ControlType::KeyboardWasd.get_binding(&Actions::Backward),
-    );
-
-    control_scheme.insert(
-        "KeyboardWasdRight",
-        ControlType::KeyboardWasd.get_binding(&Actions::Right),
-    );
-
-    // KeyboardArrow bindings
-    control_scheme.insert(
-        "KeyboardArrowForward",
-        ControlType::KeyboardArrow.get_binding(&Actions::Forward),
-    );
-
-    control_scheme.insert(
-        "KeyboardArrowLeft",
-        ControlType::KeyboardArrow.get_binding(&Actions::Left),
-    );
-
-    control_scheme.insert(
-        "KeyboardArrowBackward",
-        ControlType::KeyboardArrow.get_binding(&Actions::Backward),
-    );
-
-    control_scheme.insert(
-        "KeyboardArrowRight",
-        ControlType::KeyboardArrow.get_binding(&Actions::Right),
-    );
+    control_scheme.insert(0, wasd);
+    control_scheme.insert(1, arrows);
+    inputs.has_players(2);
 }
 
 pub fn handle_input(
-    inputs: Res<ActionInput>,
-    mut query: Query<(&mut Facing, &mut MoveVector, &ControlType), With<Player>>,
+    inputs: Res<MultiInput>,
+    mut query: Query<(&mut Facing, &mut MoveVector, &PlayerId), With<Player>>,
 ) {
-    for (mut facing, mut mv, control_type) in query.iter_mut() {
+    for (mut facing, mut mv, PlayerId(id)) in query.iter_mut() {
         let mut new_mv = Vec2::ZERO;
-        match control_type {
-            ControlType::KeyboardWasd => {
-                if inputs.pressed("KeyboardWasdForward") {
-                    new_mv.y += 1.0;
-                }
 
-                if inputs.pressed("KeyboardWasdLeft") {
-                    new_mv.x -= 1.0;
-                }
+        let actions = inputs.get(*id).unwrap();
 
-                if inputs.pressed("KeyboardWasdBackward") {
-                    new_mv.y -= 1.0;
-                }
-
-                if inputs.pressed("KeyboardWasdRight") {
-                    new_mv.x += 1.0;
-                }
-            }
-            ControlType::KeyboardArrow => {
-                if inputs.pressed("KeyboardArrowForward") {
-                    new_mv.y += 1.0;
-                }
-
-                if inputs.pressed("KeyboardArrowLeft") {
-                    new_mv.x -= 1.0;
-                }
-
-                if inputs.pressed("KeyboardArrowBackward") {
-                    new_mv.y -= 1.0;
-                }
-
-                if inputs.pressed("KeyboardArrowRight") {
-                    new_mv.x += 1.0;
-                }
-            }
-            ControlType::Gamepad => todo!(),
+        if actions.pressed(Actions::Forward) {
+            new_mv.y += 1.0;
+        }
+        if actions.pressed(Actions::Backward) {
+            new_mv.y -= 1.0;
+        }
+        if actions.pressed(Actions::Left) {
+            new_mv.x -= 1.0;
+        }
+        if actions.pressed(Actions::Right) {
+            new_mv.x += 1.0;
         }
 
         mv.0 = new_mv;

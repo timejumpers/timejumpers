@@ -10,8 +10,8 @@ repository = "https://github.com/shakesbeare/timejumpers"
 license = "GNU APGL v3.0"
 
 [dependencies]
-action_maps = "0.1.0"
 bevy = { version = "0.12.1" }
+action_maps = "0.2.1"
 
 [profile.dev]
 opt-level = 1
