@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use std::path::{ Path, PathBuf };
+use std::path::{Path, PathBuf};
 
 #[derive(Resource)]
 pub struct AssetPath(pub PathBuf);
@@ -28,7 +28,8 @@ pub fn set_asset_path(mut asset_path_res: ResMut<AssetPath>) {
             let file_name = &item.file_name();
             let filename = file_name.to_string_lossy();
             if filename.contains("assets") {
-                asset_path_res.0 = dir.as_path().join(filename.to_string()).to_path_buf();
+                asset_path_res.0 =
+                    dir.as_path().join(filename.to_string()).to_path_buf();
                 return;
             }
         }

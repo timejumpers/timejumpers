@@ -33,7 +33,9 @@ pub struct EntityAtlas {
     pub backward: Handle<TextureAtlas>,
 }
 
-pub fn sprite_facing(mut query: Query<(&Facing, &EntityAtlas, &mut Handle<TextureAtlas>)>) {
+pub fn sprite_facing(
+    mut query: Query<(&Facing, &EntityAtlas, &mut Handle<TextureAtlas>)>,
+) {
     for (facing, atlas, mut handle) in query.iter_mut() {
         match facing {
             Facing::Forward => {
@@ -46,7 +48,9 @@ pub fn sprite_facing(mut query: Query<(&Facing, &EntityAtlas, &mut Handle<Textur
     }
 }
 
-pub fn move_entities(mut query: Query<(&mut Transform, &MoveVector, Option<&MoveSpeed>)>) {
+pub fn move_entities(
+    mut query: Query<(&mut Transform, &MoveVector, Option<&MoveSpeed>)>,
+) {
     for (mut transform, mv, movement_speed) in query.iter_mut() {
         let mut ms: f32 = 1.0;
 

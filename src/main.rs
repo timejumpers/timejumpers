@@ -1,8 +1,6 @@
 use action_maps::prelude::*;
 use bevy::prelude::*;
-use timejumpers::{
-    animation, assets, control, enemy, entities, multiplayer, player,
-};
+use timejumpers::{animation, assets, control, enemy, entities, multiplayer, player};
 
 fn main() {
     App::new()
