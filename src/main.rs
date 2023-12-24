@@ -1,11 +1,11 @@
-use action_maps::prelude::*;
+use action_maps::multiplayer::*;
 use bevy::prelude::*;
 use timejumpers::{animation, assets, control, enemy, entities, multiplayer, player};
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
-        .add_plugins(ActionMapPlugin)
+        .add_plugins(MultiActionMapPlugin)
         .insert_resource(multiplayer::NumPlayers(2))
         .insert_resource(assets::AssetPath(std::path::PathBuf::from("./")))
         .add_systems(PreStartup, assets::set_asset_path)
@@ -13,7 +13,7 @@ fn main() {
         .add_plugins(player::PlayerSetup)
         .add_systems(
             PreUpdate,
-            control::handle_input.in_set(UniversalInputSet::HandleActions),
+            control::handle_input.in_set(ActionMapSet::HandleActions),
         )
         .add_systems(
             Update,

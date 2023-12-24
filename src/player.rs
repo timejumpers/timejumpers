@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 
 use crate::animation::{AnimationIndices, AnimationTimer};
-use crate::control::ControlType;
 use crate::entities::{
     EntityAtlas, Facing, Health, MoveSpeed, MoveVector, ReceiveDamage,
 };
@@ -21,6 +20,9 @@ const MOVESPEED: f32 = 5.0;
 
 #[derive(Component)]
 pub struct Player;
+
+#[derive(Component)]
+pub struct PlayerId(pub usize);
 
 fn setup_player(
     mut commands: Commands,
@@ -55,7 +57,7 @@ fn setup_player(
         MoveVector(Vec2::new(0.0, 0.0)),
         MoveSpeed(MOVESPEED),
         Health(HEALTH),
-        ControlType::KeyboardWasd,
+        PlayerId(0),
         ReceiveDamage,
         SpriteSheetBundle {
             texture_atlas: front.clone(),
@@ -80,7 +82,7 @@ fn setup_player(
         MoveVector(Vec2::new(0.0, 0.0)),
         MoveSpeed(MOVESPEED),
         Health(HEALTH),
-        ControlType::KeyboardArrow,
+        PlayerId(1),
         ReceiveDamage,
         SpriteSheetBundle {
             texture_atlas: front,
