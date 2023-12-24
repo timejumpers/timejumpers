@@ -43,13 +43,11 @@ impl ControlType {
                 Actions::Backward => ScanCode(get_scan_code("S")).into(),
                 Actions::Right => ScanCode(get_scan_code("D")).into(),
             },
-            ControlType::KeyboardArrow => {
-                match action {
-                    Actions::Forward => ScanCode(get_scan_code("Up")).into(),
-                    Actions::Left => ScanCode(get_scan_code("Left")).into(),
-                    Actions::Backward => ScanCode(get_scan_code("Down")).into(),
-                    Actions::Right => ScanCode(get_scan_code("Right")).into(),
-                }
+            ControlType::KeyboardArrow => match action {
+                Actions::Forward => ScanCode(get_scan_code("Up")).into(),
+                Actions::Left => ScanCode(get_scan_code("Left")).into(),
+                Actions::Backward => ScanCode(get_scan_code("Down")).into(),
+                Actions::Right => ScanCode(get_scan_code("Right")).into(),
             },
             ControlType::Gamepad => todo!(),
         }
@@ -102,10 +100,7 @@ pub fn bind_keys(mut control_scheme: ResMut<ControlScheme>) {
 
 pub fn handle_input(
     inputs: Res<ActionInput>,
-    mut query: Query<
-        (&mut Facing, &mut MoveVector, &ControlType),
-        With<Player>,
-    >,
+    mut query: Query<(&mut Facing, &mut MoveVector, &ControlType), With<Player>>,
 ) {
     for (mut facing, mut mv, control_type) in query.iter_mut() {
         let mut new_mv = Vec2::ZERO;
@@ -126,7 +121,7 @@ pub fn handle_input(
                 if inputs.pressed("KeyboardWasdRight") {
                     new_mv.x += 1.0;
                 }
-            },
+            }
             ControlType::KeyboardArrow => {
                 if inputs.pressed("KeyboardArrowForward") {
                     new_mv.y += 1.0;
@@ -143,7 +138,7 @@ pub fn handle_input(
                 if inputs.pressed("KeyboardArrowRight") {
                     new_mv.x += 1.0;
                 }
-            },
+            }
             ControlType::Gamepad => todo!(),
         }
 
@@ -156,4 +151,3 @@ pub fn handle_input(
         }
     }
 }
-
