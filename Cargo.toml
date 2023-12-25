@@ -11,7 +11,7 @@ license = "GNU APGL v3.0"
 
 [dependencies]
 bevy = { version = "0.12.1" }
-action_maps = "0.2.1"
+action_maps = "0.3.0"
 
 [profile.dev]
 opt-level = 1
