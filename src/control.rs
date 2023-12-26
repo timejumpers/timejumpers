@@ -30,7 +30,6 @@ pub fn bind_keys(
     mut multi_scheme: ResMut<MultiScheme>,
     mut multi_input: ResMut<MultiInput>,
 ) {
-
     make_multi_input!(
         multi_input,
         multi_scheme,
