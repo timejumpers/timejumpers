@@ -27,25 +27,25 @@ impl From<Actions> for Action {
 }
 
 pub fn bind_keys(
-    mut control_scheme: ResMut<MultiScheme>,
-    mut inputs: ResMut<MultiInput>,
+    mut multi_scheme: ResMut<MultiScheme>,
+    mut multi_input: ResMut<MultiInput>,
 ) {
-    let wasd = ControlScheme::with_controls(vec![
-        (Actions::Forward, ScanCode(get_scan_code("W"))),
-        (Actions::Backward, ScanCode(get_scan_code("S"))),
-        (Actions::Left, ScanCode(get_scan_code("A"))),
-        (Actions::Right, ScanCode(get_scan_code("D"))),
-    ]);
-    let arrows = ControlScheme::with_controls(vec![
-        (Actions::Forward, ScanCode(get_scan_code("Up"))),
-        (Actions::Backward, ScanCode(get_scan_code("Down"))),
-        (Actions::Left, ScanCode(get_scan_code("Left"))),
-        (Actions::Right, ScanCode(get_scan_code("Right"))),
-    ]);
-
-    control_scheme.insert(0, wasd);
-    control_scheme.insert(1, arrows);
-    inputs.has_players(2);
+    make_multi_input!(
+        multi_input,
+        multi_scheme,
+        (
+            (Actions::Forward, ScanCode(get_scan_code("W"))),
+            (Actions::Backward, ScanCode(get_scan_code("S"))),
+            (Actions::Left, ScanCode(get_scan_code("A"))),
+            (Actions::Right, ScanCode(get_scan_code("D"))),
+        ),
+        (
+            (Actions::Forward, ScanCode(get_scan_code("Up"))),
+            (Actions::Backward, ScanCode(get_scan_code("Down"))),
+            (Actions::Left, ScanCode(get_scan_code("Left"))),
+            (Actions::Right, ScanCode(get_scan_code("Right"))),
+        )
+    );
 }
 
 pub fn handle_input(
