@@ -1,4 +1,4 @@
-use crate::entities::{Health, ReceiveDamage};
+use crate::entities::Health;
 use bevy::prelude::*;
 use bevy::sprite::collide_aabb::collide;
 
@@ -32,11 +32,14 @@ pub fn spawn_enemy(
 }
 
 pub fn check_for_collisions(
-    damager_query: Query<(&Transform, &ContactDamage)>,
-    mut receiver_query: Query<(&Transform, &mut Health), With<ReceiveDamage>>,
+    damager_query: Query<(&Transform, &ContactDamage, Entity)>,
+    mut receiver_query: Query<(&Transform, &mut Health, Entity)>,
 ) {
-    for (transform, mut health) in receiver_query.iter_mut() {
-        for (d_transform, damage) in damager_query.iter() {
+    for (transform, mut health, entity) in receiver_query.iter_mut() {
+        for (d_transform, damage, d_entity) in damager_query.iter() {
+            if entity == d_entity {
+                continue;
+            }
             let collision = collide(
                 transform.translation,
                 transform.scale.truncate(),

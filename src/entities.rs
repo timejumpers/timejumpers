@@ -25,9 +25,6 @@ pub struct MoveSpeed(pub f32);
 pub struct Health(pub i32);
 
 #[derive(Component)]
-pub struct ReceiveDamage;
-
-#[derive(Component)]
 pub struct EntityAtlas {
     pub forward: Handle<TextureAtlas>,
     pub backward: Handle<TextureAtlas>,

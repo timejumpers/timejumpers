@@ -1,4 +1,4 @@
-use action_maps::multiplayer::*;
+use action_maps::multiplayer_prelude::*;
 use bevy::prelude::*;
 use timejumpers::{animation, assets, control, enemy, entities, multiplayer, player};
 
@@ -13,7 +13,10 @@ fn main() {
         .add_plugins(player::PlayerSetup)
         .add_systems(
             PreUpdate,
-            control::handle_input.in_set(ActionMapSet::HandleActions),
+            (
+                control::handle_input.in_set(ActionMapSet::HandleActions),
+                timejumpers::camera::move_camera,
+            ),
         )
         .add_systems(
             Update,

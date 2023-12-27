@@ -2,7 +2,7 @@ use bevy::prelude::*;
 
 use crate::animation::{AnimationIndices, AnimationTimer};
 use crate::entities::{
-    EntityAtlas, Facing, Health, MoveSpeed, MoveVector, ReceiveDamage,
+    EntityAtlas, Facing, Health, MoveSpeed, MoveVector,
 };
 
 const FRONT_WALK_CYCLE_PATH: &str = "Houston Front Walk Cycle.png";
@@ -58,7 +58,6 @@ fn setup_player(
         MoveSpeed(MOVESPEED),
         Health(HEALTH),
         PlayerId(0),
-        ReceiveDamage,
         SpriteSheetBundle {
             texture_atlas: front.clone(),
             sprite: TextureAtlasSprite::new(animation_indices.clone().first),
@@ -66,31 +65,6 @@ fn setup_player(
             ..default()
         },
         animation_indices.clone(),
-        AnimationTimer(Timer::from_seconds(
-            ANIMATION_FRAME_TIME,
-            TimerMode::Repeating,
-        )),
-    ));
-
-    commands.spawn((
-        Player,
-        EntityAtlas {
-            forward: front.clone(),
-            backward: back,
-        },
-        Facing::Forward,
-        MoveVector(Vec2::new(0.0, 0.0)),
-        MoveSpeed(MOVESPEED),
-        Health(HEALTH),
-        PlayerId(1),
-        ReceiveDamage,
-        SpriteSheetBundle {
-            texture_atlas: front,
-            sprite: TextureAtlasSprite::new(animation_indices.first),
-            transform: Transform::from_scale(Vec3::splat(2.0)),
-            ..default()
-        },
-        animation_indices,
         AnimationTimer(Timer::from_seconds(
             ANIMATION_FRAME_TIME,
             TimerMode::Repeating,

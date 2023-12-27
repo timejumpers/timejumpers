@@ -4,7 +4,7 @@ use crate::{
 };
 
 use action_maps::get_scan_code;
-use action_maps::multiplayer::*;
+use action_maps::multiplayer_prelude::*;
 use bevy::prelude::*;
 
 #[derive(Clone, Copy)]
@@ -13,6 +13,7 @@ pub enum Actions {
     Backward,
     Left,
     Right,
+    Attack,
 }
 
 impl From<Actions> for Action {
@@ -22,6 +23,7 @@ impl From<Actions> for Action {
             Actions::Backward => Action::from("Backward"),
             Actions::Left => Action::from("Left"),
             Actions::Right => Action::from("Right"),
+            Actions::Attack => Action::from("Attack"),
         }
     }
 }
@@ -34,16 +36,11 @@ pub fn bind_keys(
         multi_input,
         multi_scheme,
         (
-            (Actions::Forward, ScanCode(get_scan_code("W"))),
-            (Actions::Backward, ScanCode(get_scan_code("S"))),
-            (Actions::Left, ScanCode(get_scan_code("A"))),
-            (Actions::Right, ScanCode(get_scan_code("D"))),
-        ),
-        (
-            (Actions::Forward, ScanCode(get_scan_code("Up"))),
-            (Actions::Backward, ScanCode(get_scan_code("Down"))),
-            (Actions::Left, ScanCode(get_scan_code("Left"))),
-            (Actions::Right, ScanCode(get_scan_code("Right"))),
+            (Actions::Forward, ScanCode(get_scan_code("W").unwrap())),
+            (Actions::Backward, ScanCode(get_scan_code("S").unwrap())),
+            (Actions::Left, ScanCode(get_scan_code("A").unwrap())),
+            (Actions::Right, ScanCode(get_scan_code("D").unwrap())),
+            (Actions::Attack, ScanCode(get_scan_code("Space").unwrap())),
         )
     );
 }
@@ -76,6 +73,10 @@ pub fn handle_input(
             *facing = Facing::Forward;
         } else if mv.0.y > 0.0 {
             *facing = Facing::Backward;
+        }
+
+        if actions.just_pressed(Actions::Attack) {
+            bevy::prelude::info!("Attack!");
         }
     }
 }
