@@ -1,9 +1,7 @@
 use bevy::prelude::*;
 
 use crate::animation::{AnimationIndices, AnimationTimer};
-use crate::entities::{
-    EntityAtlas, Facing, Health, MoveSpeed, MoveVector,
-};
+use crate::entities::{EntityAtlas, Facing, Health, MoveSpeed, MoveVector};
 
 const FRONT_WALK_CYCLE_PATH: &str = "Houston Front Walk Cycle.png";
 const BACK_WALK_CYCLE_PATH: &str = "Houston Back Walk Cycle.png";

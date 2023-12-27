@@ -9,10 +9,10 @@
 
 pub mod animation;
 pub mod assets;
+pub mod camera;
 pub mod control;
 pub mod enemy;
 pub mod entities;
+pub mod game;
 pub mod multiplayer;
 pub mod player;
-pub mod game;
-pub mod camera;
