@@ -8,11 +8,11 @@
 )]
 #![warn(dead_code)]
 
-pub mod assets;
 pub mod actors;
+pub mod assets;
 pub mod camera;
 pub mod control;
 pub mod game;
+pub mod graphics;
 pub mod multiplayer;
 pub mod ui;
-pub mod graphics;
