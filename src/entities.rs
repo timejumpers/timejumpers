@@ -89,7 +89,7 @@ pub fn tick_health(mut query: Query<&mut Health>, time: Res<Time>) {
 }
 
 pub fn check_alive(mut commands: Commands, mut query: Query<(&mut Health, Entity)>) {
-    for (health, mut entity) in query.iter_mut() {
+    for (health, entity) in query.iter_mut() {
         if health.current <= 0.0 {
             commands.entity(entity).despawn_recursive();
         }

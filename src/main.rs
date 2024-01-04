@@ -34,10 +34,7 @@ fn main() {
                 ui::update_health_bars,
             ),
         )
-        .add_systems(
-            PostUpdate,
-            entities::check_alive,
-        )
+        .add_systems(PostUpdate, entities::check_alive)
         .run()
 }
 
