@@ -1,8 +1,8 @@
 use crate::{
+    damage::DamageMask,
     entities::{Facing, MoveVector},
     player::PlayerId,
     projectile::{ProjectileKind, SpawnProjectile},
-    damage::DamageMask,
 };
 
 use action_maps::get_scan_code;
