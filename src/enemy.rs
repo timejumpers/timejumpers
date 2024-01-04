@@ -10,8 +10,8 @@ pub enum EnemyType {
 #[derive(Component)]
 pub struct Enemy;
 
-#[derive(Component)]
-pub struct ContactDamage(pub i32);
+#[derive(Component, Debug)]
+pub struct ContactDamage(pub f32);
 
 pub fn spawn_enemy(
     mut commands: Commands,
@@ -22,7 +22,7 @@ pub fn spawn_enemy(
     commands.spawn((
         Enemy,
         EnemyType::Zchoop,
-        ContactDamage(5),
+        ContactDamage(5.),
         SpriteBundle {
             texture: asset_server.load(bevy::asset::AssetPath::from_path(&asset_path)),
             transform: Transform::from_scale(Vec3::splat(3.0)),
@@ -34,12 +34,14 @@ pub fn spawn_enemy(
 pub fn check_for_collisions(
     damager_query: Query<(&Transform, &ContactDamage, Entity)>,
     mut receiver_query: Query<(&Transform, &mut Health, Entity)>,
+    time: Res<Time>,
 ) {
     for (transform, mut health, entity) in receiver_query.iter_mut() {
         for (d_transform, damage, d_entity) in damager_query.iter() {
             if entity == d_entity {
                 continue;
             }
+
             let collision = collide(
                 transform.translation,
                 transform.scale.truncate(),
@@ -51,8 +53,19 @@ pub fn check_for_collisions(
                 continue;
             };
 
-            health.0 -= damage.0;
-            // dbg!(health.0);
+            if let Some(last_hit) = health.last_hit {
+                // entity may be in immunity time
+                if last_hit <= health.immunity_time {
+                    info!(
+                        "IMMUNE for {} more seconds",
+                        health.immunity_time - last_hit
+                    );
+                    continue;
+                }
+            }
+            health.damage(damage.0);
+            health.last_hit = Some(0.0);
+            dbg!(&health.current);
         }
     }
 }

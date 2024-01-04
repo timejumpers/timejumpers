@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 use crate::animation::{AnimationIndices, AnimationTimer};
 use crate::entities::{EntityAtlas, Facing, Health, MoveSpeed, MoveVector};
+use crate::ui;
 
 const FRONT_WALK_CYCLE_PATH: &str = "Houston Front Walk Cycle.png";
 const BACK_WALK_CYCLE_PATH: &str = "Houston Back Walk Cycle.png";
@@ -13,11 +14,8 @@ const NUM_PAD_ROWS: f32 = 1.0;
 
 const ANIMATION_FRAME_TIME: f32 = 0.15;
 
-const HEALTH: i32 = 100;
+const HEALTH: f32 = 100.0;
 const MOVESPEED: f32 = 5.0;
-
-#[derive(Component)]
-pub struct Player;
 
 #[derive(Component)]
 pub struct PlayerId(pub usize);
@@ -45,29 +43,33 @@ fn setup_player(
         &asset_path_res,
     );
 
-    commands.spawn((
-        Player,
-        EntityAtlas {
-            forward: front.clone(),
-            backward: back.clone(),
-        },
-        Facing::Forward,
-        MoveVector(Vec2::new(0.0, 0.0)),
-        MoveSpeed(MOVESPEED),
-        Health(HEALTH),
-        PlayerId(0),
-        SpriteSheetBundle {
-            texture_atlas: front.clone(),
-            sprite: TextureAtlasSprite::new(animation_indices.clone().first),
-            transform: Transform::from_scale(Vec3::splat(2.0)),
-            ..default()
-        },
-        animation_indices.clone(),
-        AnimationTimer(Timer::from_seconds(
-            ANIMATION_FRAME_TIME,
-            TimerMode::Repeating,
-        )),
-    ));
+    let player = commands
+        .spawn((
+            PlayerId(0),
+            Health::new(HEALTH, 0.25),
+            EntityAtlas {
+                forward: front.clone(),
+                backward: back.clone(),
+            },
+            Facing::Forward,
+            MoveVector(Vec2::new(0.0, 0.0)),
+            MoveSpeed(MOVESPEED),
+            SpriteSheetBundle {
+                texture_atlas: front.clone(),
+                sprite: TextureAtlasSprite::new(animation_indices.clone().first),
+                transform: Transform::from_scale(Vec3::splat(2.0)),
+                ..default()
+            },
+            animation_indices.clone(),
+            AnimationTimer(Timer::from_seconds(
+                ANIMATION_FRAME_TIME,
+                TimerMode::Repeating,
+            )),
+        ))
+        .id();
+
+    let health_bar = ui::create_health_bar(&mut commands);
+    commands.entity(player).add_child(health_bar);
 }
 
 fn create_texture_atlas(

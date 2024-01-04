@@ -21,8 +21,28 @@ pub struct MoveVector(pub Vec2);
 #[derive(Component)]
 pub struct MoveSpeed(pub f32);
 
-#[derive(Component)]
-pub struct Health(pub i32);
+#[derive(Component, Debug)]
+pub struct Health {
+    pub max: f32,
+    pub current: f32,
+    pub last_hit: Option<f32>,
+    pub immunity_time: f32,
+}
+
+impl Health {
+    pub fn new(max_health: f32, immunity_time: f32) -> Self {
+        Health {
+            max: max_health,
+            current: max_health,
+            last_hit: None,
+            immunity_time,
+        }
+    }
+
+    pub fn damage(&mut self, amount: f32) {
+        self.current -= amount;
+    }
+}
 
 #[derive(Component)]
 pub struct EntityAtlas {
@@ -56,5 +76,14 @@ pub fn move_entities(
         }
         transform.translation.x += mv.0.x * ms;
         transform.translation.y += mv.0.y * ms;
+    }
+}
+
+pub fn tick_health(mut query: Query<&mut Health>, time: Res<Time>) {
+    for mut health in query.iter_mut() {
+        if let Some(last_hit) = health.last_hit {
+            let new = last_hit + time.delta_seconds();
+            health.last_hit = Some(new);
+        }
     }
 }

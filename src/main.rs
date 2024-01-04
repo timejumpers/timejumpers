@@ -1,6 +1,8 @@
 use action_maps::multiplayer_prelude::*;
 use bevy::prelude::*;
-use timejumpers::{animation, assets, control, enemy, entities, multiplayer, player};
+use timejumpers::{
+    animation, assets, control, enemy, entities, multiplayer, player, projectile, ui,
+};
 
 fn main() {
     App::new()
@@ -8,8 +10,9 @@ fn main() {
         .add_plugins(MultiActionMapPlugin)
         .insert_resource(multiplayer::NumPlayers(2))
         .insert_resource(assets::AssetPath(std::path::PathBuf::from("./")))
+        .add_event::<projectile::SpawnProjectile>()
         .add_systems(PreStartup, assets::set_asset_path)
-        .add_systems(Startup, (setup, enemy::spawn_enemy, control::bind_keys))
+        .add_systems(Startup, (setup, /*enemy::spawn_enemy,*/ control::bind_keys))
         .add_plugins(player::PlayerSetup)
         .add_systems(
             PreUpdate,
@@ -24,7 +27,10 @@ fn main() {
                 animation::animate_sprites,
                 entities::sprite_facing,
                 entities::move_entities,
+                entities::tick_health,
                 enemy::check_for_collisions,
+                projectile::spawn_projectiles,
+                ui::update_health_bars,
             ),
         )
         .run()
