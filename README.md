@@ -9,6 +9,7 @@ Jump between the timelines to save the world!
 - [Cargo Bundle](https://github.com/burtonageo/cargo-bundle) \[for Bundling releases\]
 - A C compiler
 - Git
+- [git-lfs](https://git-lfs.com/)
 
 ## Contributing
 

@@ -1,8 +1,8 @@
 use crate::{
-    damage::DamageMask,
-    entities::{Facing, MoveVector},
-    player::PlayerId,
-    projectile::{ProjectileKind, SpawnProjectile},
+    actors::damage::DamageMask,
+    actors::player::PlayerId,
+    actors::projectile::{ProjectileKind, SpawnProjectile},
+    actors::MoveVector,
 };
 
 use action_maps::get_scan_code;
@@ -49,11 +49,11 @@ pub fn bind_keys(
 
 pub fn handle_input(
     inputs: Res<MultiInput>,
-    mut query: Query<(&mut Facing, &mut MoveVector, &PlayerId)>,
+    mut query: Query<(&mut MoveVector, &PlayerId)>,
     transform_query: Query<&Transform, With<PlayerId>>,
     mut spawn_proj: EventWriter<SpawnProjectile>,
 ) {
-    for (mut facing, mut mv, PlayerId(id)) in query.iter_mut() {
+    for (mut mv, PlayerId(id)) in query.iter_mut() {
         let mut new_mv = Vec2::ZERO;
 
         let actions = inputs.get(*id).unwrap();
@@ -72,12 +72,6 @@ pub fn handle_input(
         }
 
         mv.0 = new_mv;
-
-        if mv.0.y < 0.0 {
-            *facing = Facing::Forward;
-        } else if mv.0.y > 0.0 {
-            *facing = Facing::Backward;
-        }
 
         if actions.just_pressed(Actions::Attack) {
             let translation = transform_query.single().translation;

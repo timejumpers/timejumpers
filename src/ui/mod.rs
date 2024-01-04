@@ -1,4 +1,4 @@
-use crate::entities::Health;
+use crate::actors::Health;
 use bevy::prelude::*;
 
 #[derive(Component)]

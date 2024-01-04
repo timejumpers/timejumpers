@@ -8,15 +8,11 @@
 )]
 #![warn(dead_code)]
 
-pub mod animation;
+pub mod actors;
 pub mod assets;
 pub mod camera;
 pub mod control;
-pub mod damage;
-pub mod enemy;
-pub mod entities;
 pub mod game;
+pub mod graphics;
 pub mod multiplayer;
-pub mod player;
-pub mod projectile;
 pub mod ui;
