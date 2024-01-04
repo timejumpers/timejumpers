@@ -1,3 +1,8 @@
+pub mod damage;
+pub mod enemy;
+pub mod player;
+pub mod projectile;
+
 use bevy::prelude::*;
 
 #[derive(Component, Debug)]
@@ -45,13 +50,13 @@ impl Health {
 }
 
 #[derive(Component)]
-pub struct EntityAtlas {
+pub struct ActorAtlas {
     pub forward: Handle<TextureAtlas>,
     pub backward: Handle<TextureAtlas>,
 }
 
 pub fn sprite_facing(
-    mut query: Query<(&Facing, &EntityAtlas, &mut Handle<TextureAtlas>)>,
+    mut query: Query<(&Facing, &ActorAtlas, &mut Handle<TextureAtlas>)>,
 ) {
     for (facing, atlas, mut handle) in query.iter_mut() {
         match facing {
@@ -65,17 +70,31 @@ pub fn sprite_facing(
     }
 }
 
-pub fn move_entities(
-    mut query: Query<(&mut Transform, &MoveVector, Option<&MoveSpeed>)>,
+pub fn move_actors(
+    mut query: Query<(
+        &mut Transform,
+        Option<&mut Facing>,
+        &MoveVector,
+        Option<&MoveSpeed>,
+    )>,
 ) {
-    for (mut transform, mv, movement_speed) in query.iter_mut() {
-        let mut ms: f32 = 1.0;
+    for (mut transform, facing, mv, movement_speed) in query.iter_mut() {
+        let mut move_speed: f32 = 1.0;
 
         if let Some(val) = movement_speed {
-            ms = val.0;
+            move_speed = val.0;
         }
-        transform.translation.x += mv.0.x * ms;
-        transform.translation.y += mv.0.y * ms;
+
+        if let Some(mut facing) = facing {
+            if mv.0.y < 0.0 {
+                *facing = Facing::Forward;
+            } else if mv.0.y > 0.0 {
+                *facing = Facing::Backward;
+            }
+        }
+
+        transform.translation.x += mv.0.x * move_speed;
+        transform.translation.y += mv.0.y * move_speed;
     }
 }
 

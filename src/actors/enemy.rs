@@ -1,4 +1,4 @@
-use crate::{damage::DamageMask, entities::Health};
+use crate::{actors::damage::DamageMask, actors::Health};
 use bevy::prelude::*;
 
 #[derive(Component)]

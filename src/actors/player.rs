@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
-use crate::animation::{AnimationIndices, AnimationTimer};
-use crate::entities::{EntityAtlas, Facing, Health, MoveSpeed, MoveVector};
+use crate::actors::{ActorAtlas, Facing, Health, MoveSpeed, MoveVector};
+use crate::graphics::animation::{AnimationIndices, AnimationTimer};
 use crate::ui;
 
 const FRONT_WALK_CYCLE_PATH: &str = "Houston Front Walk Cycle.png";
@@ -47,7 +47,7 @@ fn setup_player(
         .spawn((
             PlayerId(0),
             Health::new(HEALTH, 0.25),
-            EntityAtlas {
+            ActorAtlas {
                 forward: front.clone(),
                 backward: back.clone(),
             },

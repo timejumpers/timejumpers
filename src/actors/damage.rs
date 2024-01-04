@@ -1,9 +1,9 @@
-use crate::entities::Health;
+use crate::actors::Health;
 use bevy::prelude::*;
 use bevy::sprite::collide_aabb::collide;
 
-use crate::enemy::{ContactDamage, Enemy};
-use crate::player::PlayerId;
+use crate::actors::enemy::{ContactDamage, Enemy};
+use crate::actors::player::PlayerId;
 
 #[derive(Clone, Copy, Component)]
 pub enum DamageMask {

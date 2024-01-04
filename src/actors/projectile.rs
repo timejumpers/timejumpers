@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
-use crate::damage::DamageMask;
-use crate::{assets::AssetPath, enemy::ContactDamage, entities::MoveVector};
+use crate::actors::damage::DamageMask;
+use crate::{actors::enemy::ContactDamage, actors::MoveVector, assets::AssetPath};
 
 #[derive(Event)]
 pub struct SpawnProjectile {
@@ -13,6 +13,7 @@ pub struct SpawnProjectile {
 
 pub enum ProjectileKind {
     MusketBall,
+    Arrow,
 }
 
 pub fn spawn_projectiles(
@@ -39,6 +40,7 @@ pub fn spawn_projectiles(
                     ev.mask,
                 ));
             }
+            ProjectileKind::Arrow => todo!(),
         }
     }
 }

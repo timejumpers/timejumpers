@@ -1,8 +1,10 @@
 use action_maps::multiplayer_prelude::*;
 use bevy::prelude::*;
 use timejumpers::{
-    animation, assets, control, damage, enemy, entities, multiplayer, player,
-    projectile, ui,
+    actors::{self, damage, enemy, player, projectile},
+    assets, control,
+    graphics::animation,
+    multiplayer, ui,
 };
 
 fn main() {
@@ -26,15 +28,15 @@ fn main() {
             Update,
             (
                 animation::animate_sprites,
-                entities::sprite_facing,
-                entities::move_entities,
-                entities::tick_health,
+                actors::sprite_facing,
+                actors::move_actors,
+                actors::tick_health,
                 damage::check_for_collisions,
                 projectile::spawn_projectiles,
                 ui::update_health_bars,
             ),
         )
-        .add_systems(PostUpdate, entities::check_alive)
+        .add_systems(PostUpdate, actors::check_alive)
         .run()
 }
 
