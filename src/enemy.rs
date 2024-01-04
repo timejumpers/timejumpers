@@ -30,6 +30,7 @@ pub fn spawn_enemy(
                 .with_scale(Vec3::splat(3.0)),
             ..default()
         },
+
     )).id();
 
     let health_bar = crate::ui::create_health_bar(&mut commands);
