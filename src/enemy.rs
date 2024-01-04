@@ -34,7 +34,6 @@ pub fn spawn_enemy(
 pub fn check_for_collisions(
     damager_query: Query<(&Transform, &ContactDamage, Entity)>,
     mut receiver_query: Query<(&Transform, &mut Health, Entity)>,
-    time: Res<Time>,
 ) {
     for (transform, mut health, entity) in receiver_query.iter_mut() {
         for (d_transform, damage, d_entity) in damager_query.iter() {
@@ -65,7 +64,6 @@ pub fn check_for_collisions(
             }
             health.damage(damage.0);
             health.last_hit = Some(0.0);
-            dbg!(&health.current);
         }
     }
 }
