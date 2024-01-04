@@ -3,7 +3,8 @@
 #![allow(
     clippy::needless_return,
     clippy::multiple_crate_versions,
-    clippy::too_many_arguments
+    clippy::too_many_arguments,
+    clippy::type_complexity
 )]
 #![warn(dead_code)]
 
@@ -16,3 +17,5 @@ pub mod entities;
 pub mod game;
 pub mod multiplayer;
 pub mod player;
+pub mod projectile;
+pub mod ui;

@@ -1,6 +1,7 @@
 use crate::{
     entities::{Facing, MoveVector},
-    player::{Player, PlayerId},
+    player::PlayerId,
+    projectile::{ProjectileKind, SpawnProjectile},
 };
 
 use action_maps::get_scan_code;
@@ -47,7 +48,9 @@ pub fn bind_keys(
 
 pub fn handle_input(
     inputs: Res<MultiInput>,
-    mut query: Query<(&mut Facing, &mut MoveVector, &PlayerId), With<Player>>,
+    mut query: Query<(&mut Facing, &mut MoveVector, &PlayerId)>,
+    transform_query: Query<&Transform, With<PlayerId>>,
+    mut spawn_proj: EventWriter<SpawnProjectile>,
 ) {
     for (mut facing, mut mv, PlayerId(id)) in query.iter_mut() {
         let mut new_mv = Vec2::ZERO;
@@ -76,7 +79,12 @@ pub fn handle_input(
         }
 
         if actions.just_pressed(Actions::Attack) {
-            bevy::prelude::info!("Attack!");
+            let translation = transform_query.single().translation;
+            spawn_proj.send(SpawnProjectile {
+                origin: translation,
+                speed: 10.0,
+                kind: ProjectileKind::MusketBall,
+            });
         }
     }
 }
