@@ -19,3 +19,4 @@ pub mod multiplayer;
 pub mod player;
 pub mod projectile;
 pub mod ui;
+pub mod damage;

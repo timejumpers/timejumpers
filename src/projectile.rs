@@ -1,17 +1,20 @@
 use bevy::prelude::*;
 
 use crate::{assets::AssetPath, enemy::ContactDamage, entities::MoveVector};
+use crate::damage::DamageMask;
 
 #[derive(Event)]
 pub struct SpawnProjectile {
     pub origin: Vec3,
     pub speed: f32,
     pub kind: ProjectileKind,
+    pub mask: DamageMask,
 }
 
 pub enum ProjectileKind {
     MusketBall,
 }
+
 
 pub fn spawn_projectiles(
     mut events: EventReader<SpawnProjectile>,
@@ -34,6 +37,7 @@ pub fn spawn_projectiles(
                     },
                     MoveVector(Vec2::new(0.0, ev.speed)),
                     ContactDamage(25.0),
+                    ev.mask,
                 ));
             }
         }

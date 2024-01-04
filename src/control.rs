@@ -2,6 +2,7 @@ use crate::{
     entities::{Facing, MoveVector},
     player::PlayerId,
     projectile::{ProjectileKind, SpawnProjectile},
+    damage::DamageMask,
 };
 
 use action_maps::get_scan_code;
@@ -84,6 +85,7 @@ pub fn handle_input(
                 origin: translation,
                 speed: 10.0,
                 kind: ProjectileKind::MusketBall,
+                mask: DamageMask::IgnoresPlayers,
             });
         }
     }
